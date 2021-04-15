@@ -31,6 +31,17 @@ export interface RunTestsRequest {
 }
 
 /**
+ * Request to the main thread to run a set of tests.
+ */
+export interface ExtensionRunTestsRequest {
+	id: string;
+	tests: string[];
+	exclude: string[];
+	debug: boolean;
+	persist: boolean;
+}
+
+/**
  * Request from the main thread to run tests for a single provider.
  */
 export interface RunTestForProviderRequest {
@@ -56,10 +67,16 @@ export interface ITestMessage {
 	location: IRichLocation | undefined;
 }
 
-export interface ITestState {
+export interface ITestTaskState {
 	state: TestResultState;
 	duration: number | undefined;
 	messages: ITestMessage[];
+}
+
+export interface ITestRunTask {
+	id: number;
+	name: string | undefined;
+	running: boolean;
 }
 
 /**
@@ -115,9 +132,17 @@ export const applyTestItemUpdate = (internal: InternalTestItem | ITestItemUpdate
 /**
  * Test result item used in the main thread.
  */
-export interface TestResultItem extends IncrementalTestCollectionItem {
-	/** Current state of this test */
-	state: ITestState;
+export interface TestResultItem {
+	/** Parent ID, if any */
+	parent: string | null;
+	/** Raw test item properties */
+	item: ITestItem;
+	/** Child IDs in the run */
+	children: Set<string>;
+	/** State of this test in various tasks */
+	tasks: ITestTaskState[];
+	/** State of this test as a computation of its tasks */
+	ownComputedState: TestResultState;
 	/** Computed state based on children */
 	computedState: TestResultState;
 	/** True if the test is outdated */
@@ -141,6 +166,8 @@ export interface ISerializedTestResults {
 	output?: string;
 	/** Subset of test result items */
 	items: SerializedTestResultItem[];
+	/** Tasks involved in the run. */
+	tasks: ITestRunTask[];
 }
 
 export const enum TestDiffOpType {

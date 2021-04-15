@@ -878,7 +878,7 @@ abstract class RunOrDebugFailedTests extends RunOrDebugExtsById {
 			const resultSet = results[i];
 			for (const test of resultSet.tests) {
 				const path = this.getPathForTest(test, resultSet).join(sep);
-				if (isFailedState(test.state.state)) {
+				if (isFailedState(test.ownComputedState)) {
 					paths.add(path);
 				} else {
 					paths.delete(path);

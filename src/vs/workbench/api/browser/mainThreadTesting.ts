@@ -3,17 +3,16 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { bufferToStream, VSBuffer } from 'vs/base/common/buffer';
+import { VSBuffer } from 'vs/base/common/buffer';
 import { CancellationToken } from 'vs/base/common/cancellation';
 import { Disposable, IDisposable } from 'vs/base/common/lifecycle';
-import { emptyStream } from 'vs/base/common/stream';
 import { isDefined } from 'vs/base/common/types';
 import { URI, UriComponents } from 'vs/base/common/uri';
 import { Range } from 'vs/editor/common/core/range';
 import { extHostNamedCustomer } from 'vs/workbench/api/common/extHostCustomers';
 import { TestResultState } from 'vs/workbench/api/common/extHostTypes';
-import { getTestSubscriptionKey, ISerializedTestResults, ITestMessage, RunTestsRequest, TestDiffOpType, TestsDiff } from 'vs/workbench/contrib/testing/common/testCollection';
-import { HydratedTestResult, LiveTestResult } from 'vs/workbench/contrib/testing/common/testResult';
+import { ExtensionRunTestsRequest, getTestSubscriptionKey, ITestItem, ITestMessage, ITestRunTask, RunTestsRequest, TestDiffOpType, TestsDiff } from 'vs/workbench/contrib/testing/common/testCollection';
+import { LiveTestResult } from 'vs/workbench/contrib/testing/common/testResult';
 import { ITestResultService } from 'vs/workbench/contrib/testing/common/testResultService';
 import { ITestRootProvider, ITestService } from 'vs/workbench/contrib/testing/common/testService';
 import { ExtHostContext, ExtHostTestingResource, ExtHostTestingShape, IExtHostContext, MainContext, MainThreadTestingShape } from '../common/extHost.protocol';
@@ -72,43 +71,57 @@ export class MainThreadTesting extends Disposable implements MainThreadTestingSh
 	/**
 	 * @inheritdoc
 	 */
-	public $publishExtensionProvidedResults(results: ISerializedTestResults, persist: boolean): void {
-		this.resultService.push(new HydratedTestResult(
-			results,
-			() => Promise.resolve(
-				results.output
-					? bufferToStream(VSBuffer.fromString(results.output))
-					: emptyStream(),
-			),
-			persist,
-		));
+	$addTestsToRun(runId: string, tests: ITestItem[]): void {
+		this.withLiveRun(runId, r => r.addTestChainToRun(tests));
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public $updateTestStateInRun(runId: string, testId: string, state: TestResultState, duration?: number): void {
-		const r = this.resultService.getResult(runId);
-		if (r && r instanceof LiveTestResult) {
-			r.updateState(testId, state, duration);
-		}
+	$startedExtensionTestRun(req: ExtensionRunTestsRequest): void {
+		this.resultService.createLiveResult(req);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public $appendOutputToRun(runId: string, output: VSBuffer): void {
-		const r = this.resultService.getResult(runId);
-		if (r && r instanceof LiveTestResult) {
-			r.output.append(output);
-		}
+	$startedTestRunTask(runId: string, task: ITestRunTask): void {
+		this.withLiveRun(runId, r => r.addTask(task));
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$finishedTestRunTask(runId: string, taskId: number): void {
+		this.withLiveRun(runId, r => r.markTaskComplete(taskId));
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	$finishedTestRun(runId: string): void {
+		this.withLiveRun(runId, r => r.markComplete());
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public $updateTestStateInRun(runId: string, taskId: number, testId: string, state: TestResultState, duration?: number): void {
+		this.withLiveRun(runId, r => r.updateState(testId, taskId, state, duration));
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public $appendOutputToRun(runId: string, _taskId: number, output: VSBuffer): void {
+		this.withLiveRun(runId, r => r.output.append(output));
 	}
 
 
 	/**
 	 * @inheritdoc
 	 */
-	public $appendTestMessageInRun(runId: string, testId: string, message: ITestMessage): void {
+	public $appendTestMessageInRun(runId: string, taskId: number, testId: string, message: ITestMessage): void {
 		const r = this.resultService.getResult(runId);
 		if (r && r instanceof LiveTestResult) {
 			if (message.location) {
@@ -116,7 +129,7 @@ export class MainThreadTesting extends Disposable implements MainThreadTestingSh
 				message.location.range = Range.lift(message.location.range);
 			}
 
-			r.appendMessage(testId, message);
+			r.appendMessage(testId, taskId, message);
 		}
 	}
 
@@ -179,5 +192,10 @@ export class MainThreadTesting extends Disposable implements MainThreadTestingSh
 			subscription.dispose();
 		}
 		this.testSubscriptions.clear();
+	}
+
+	private withLiveRun<T>(runId: string, fn: (run: LiveTestResult) => T): T | undefined {
+		const r = this.resultService.getResult(runId);
+		return r && r instanceof LiveTestResult ? fn(r) : undefined;
 	}
 }

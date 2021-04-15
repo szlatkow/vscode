@@ -18,14 +18,14 @@ suite('Workbench - Test Result Storage', () => {
 	let collection: MainThreadTestCollection;
 
 	const makeResult = (addMessage?: string) => {
-		const t = LiveTestResult.from(
+		const t = LiveTestResult.fromCoreRun(
 			'',
 			[collection],
 			emptyOutputController(),
 			{ tests: [{ src: { provider: 'provider', tree: 0 }, testId: 'id-a' }], debug: false }
 		);
 		if (addMessage) {
-			t.appendMessage('id-a', {
+			t.appendMessage('id-a', 0, {
 				message: addMessage,
 				actualOutput: undefined,
 				expectedOutput: undefined,

@@ -33,7 +33,7 @@ suite('Workbench - Test Results Service', () => {
 
 	setup(async () => {
 		changed = new Set();
-		r = LiveTestResult.from(
+		r = LiveTestResult.fromCoreRun(
 			'foo',
 			[await getInitializedMainTestCollection()],
 			emptyOutputController(),
@@ -45,7 +45,7 @@ suite('Workbench - Test Results Service', () => {
 
 	suite('LiveTestResult', () => {
 		test('is empty if no tests are requesteed', async () => {
-			const r = LiveTestResult.from('', [await getInitializedMainTestCollection()], emptyOutputController(), { tests: [], debug: false });
+			const r = LiveTestResult.fromCoreRun('', [await getInitializedMainTestCollection()], emptyOutputController(), { tests: [], debug: false });
 			assert.deepStrictEqual(getLabelsIn(r.tests), []);
 		});
 
@@ -82,7 +82,7 @@ suite('Workbench - Test Results Service', () => {
 		});
 
 		test('updateState', () => {
-			r.updateState('id-a', TestRunState.Running);
+			r.updateState('id-a', 0, TestRunState.Running);
 			assert.deepStrictEqual(r.counts, {
 				...makeEmptyCounts(),
 				[TestRunState.Running]: 1,
@@ -189,7 +189,7 @@ suite('Workbench - Test Results Service', () => {
 			results.push(r);
 			r.markComplete();
 
-			const r2 = results.push(LiveTestResult.from(
+			const r2 = results.push(LiveTestResult.fromCoreRun(
 				'',
 				[await getInitializedMainTestCollection()],
 				emptyOutputController(),
@@ -202,7 +202,7 @@ suite('Workbench - Test Results Service', () => {
 
 		test('keeps ongoing tests on top', async () => {
 			results.push(r);
-			const r2 = results.push(LiveTestResult.from(
+			const r2 = results.push(LiveTestResult.fromCoreRun(
 				'',
 				[await getInitializedMainTestCollection()],
 				emptyOutputController(),

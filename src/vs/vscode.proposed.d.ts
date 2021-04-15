@@ -2688,6 +2688,19 @@ declare module 'vscode' {
 		readonly range?: Range;
 
 		/**
+		 * State of the test in each task. In the common case, a test will only
+		 * be executed in a single task and the length of this array will be 1.
+		 */
+		readonly taskStates: ReadonlyArray<TestSnapshoptTaskState>;
+
+		/**
+		 * Optional list of nested tests for this item.
+		 */
+		readonly children: Readonly<TestResultSnapshot>[];
+	}
+
+	export interface TestSnapshoptTaskState {
+		/**
 		 * Current result of the test.
 		 */
 		readonly state: TestResultState;
@@ -2703,11 +2716,6 @@ declare module 'vscode' {
 		 * failure information if the test fails.
 		 */
 		readonly messages: ReadonlyArray<TestMessage>;
-
-		/**
-		 * Optional list of nested tests for this item.
-		 */
-		readonly children: Readonly<TestResultSnapshot>[];
 	}
 
 	//#endregion

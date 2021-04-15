@@ -193,10 +193,7 @@ export class TestService extends Disposable implements ITestService {
 			req.exclude = [...this.excludeTests.value];
 		}
 
-		const subscriptions = [...this.testSubscriptions.values()]
-			.filter(v => req.tests.some(t => v.collection.getNodeById(t.testId)))
-			.map(s => this.subscribeToDiffs(s.ident.resource, s.ident.uri));
-		const result = this.testResults.createLiveResult(subscriptions.map(s => s.object), req);
+		const result = this.testResults.createLiveResult(req);
 
 		try {
 			const tests = groupBy(req.tests, (a, b) => a.src.provider === b.src.provider ? 0 : 1);
@@ -221,7 +218,6 @@ export class TestService extends Disposable implements ITestService {
 			return result;
 		} finally {
 			this.runningTests.delete(req);
-			subscriptions.forEach(s => s.dispose());
 			result.markComplete();
 		}
 	}
