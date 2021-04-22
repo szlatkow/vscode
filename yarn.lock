@@ -10306,10 +10306,10 @@ xtend@~2.1.1:
   dependencies:
     object-keys "~0.4.0"
 
-xterm-addon-search@0.9.0-beta.1:
-  version "0.9.0-beta.1"
-  resolved "https://registry.yarnpkg.com/xterm-addon-search/-/xterm-addon-search-0.9.0-beta.1.tgz#139515da723a129c6d27c4e1a2319ef1344d76a6"
-  integrity sha512-3eRRp4iSi6Cm4+IySNLmNyClS3hr53J6yBEw6AOci+tLqyBR3US4xnODPZI3JvmMpY91P+kbWKotjRufS8AZsw==
+xterm-addon-search@0.9.0-beta.2:
+  version "0.9.0-beta.2"
+  resolved "https://registry.yarnpkg.com/xterm-addon-search/-/xterm-addon-search-0.9.0-beta.2.tgz#46de7c7d5f1d0ae546b84552c08182916d83025d"
+  integrity sha512-Ljg+O8HcGx1z2RjpV+nX070zpSjmefU09SFPBVWAHjGT983y6b5yoqG7AVVZdirsJ0zGiccAZL9Kila1CQN6nQ==
 
 xterm-addon-unicode11@0.3.0-beta.4:
   version "0.3.0-beta.4"
