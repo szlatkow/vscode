@@ -6918,12 +6918,12 @@ osenv@^0.1.4:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
 
-p-all@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/p-all/-/p-all-1.0.0.tgz#93bdf53a55a23821fdfa98b4174a99bf7f31df8d"
-  integrity sha1-k731OlWiOCH9+pi0F0qZv38x340=
+p-all@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/p-all/-/p-all-3.0.0.tgz#077c023c37e75e760193badab2bad3ccd5782bfb"
+  integrity sha512-qUZbvbBFVXm6uJ7U/WDiO0fv6waBMbjlCm4E66oZdRR+egswICarIdHyVSZZHudH8T5SF8x/JG0q0duFzPnlBw==
   dependencies:
-    p-map "^1.0.0"
+    p-map "^4.0.0"
 
 p-cancelable@^1.0.0:
   version "1.1.0"
@@ -6979,11 +6979,6 @@ p-locate@^5.0.0:
   integrity sha512-LaNjtRWUBY++zB5nE/NwcaoMylSPk+S+ZHNB1TzdbMJMny6dynpAGt7X/tl/QYq3TIeE6nxHppbo2LGymrG5Pw==
   dependencies:
     p-limit "^3.0.2"
-
-p-map@^1.0.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/p-map/-/p-map-1.2.0.tgz#e4e94f311eabbc8633a1e79908165fca26241b6b"
-  integrity sha512-r6zKACMNhjPJMTl8KcFH4li//gkrXWfbD6feV8l6doRHlzljFWGJ2AP6iKaCJXyZmAUMOPtvbW7EXkbWO/pLEA==
 
 p-map@^4.0.0:
   version "4.0.0"
