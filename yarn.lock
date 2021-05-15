@@ -9540,10 +9540,10 @@ typescript@^2.6.2:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.6.2.tgz#3c5b6fd7f6de0914269027f03c0946758f7673a4"
   integrity sha1-PFtv1/beCRQmkCfwPAlGdY92c6Q=
 
-typescript@^4.3.0-dev.20210503:
-  version "4.3.0-dev.20210503"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.0-dev.20210503.tgz#0a3eb480676effd4975beb5a2f097530ed53550a"
-  integrity sha512-Gj3TQve5PLCZoPBy96Yp6Y3+jNLmms0i3ynhxEJAKgax7Fxui29/uG/DClbBtKz1peNhzXwikXVFFAV1BB/3mw==
+typescript@^4.3.0-dev.20210510:
+  version "4.3.0-dev.20210510"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.0-dev.20210510.tgz#a50dd4f9a6e616f82cb33148c7f5ee80cc07857b"
+  integrity sha512-HR21ZkELulLWOHfHIA57/6rD1rkadgjyMp1TVeXQ5v82/rn0V3ROkAnd1elt+Mrjc2pTXcIwom7E/N5RCUUxMg==
 
 typical@^4.0.0:
   version "4.0.0"
