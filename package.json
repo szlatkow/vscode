@@ -183,7 +183,7 @@
     "rcedit": "^1.1.0",
     "request": "^2.85.0",
     "rimraf": "^2.2.8",
-    "sinon": "^1.17.2",
+    "sinon": "^10.0.0",
     "source-map": "0.6.1",
     "source-map-support": "^0.3.2",
     "style-loader": "^1.0.0",
